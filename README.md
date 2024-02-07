@@ -4,6 +4,7 @@ This script facilitates the automated process of generating transcriptions for a
 
 ## Prerequisites
 - [Whisper AI](https://whisper.ai/) installed and configured
+- [ffmpeg-normalize](https://github.com/slhck/ffmpeg-normalize) installed and configured
 - [llm](https://github.com/simonw/llm) installed and configured
 - [ffmpeg](https://ffmpeg.org/) installed and accessible in the system path
 - [Visual Studio Code](https://code.visualstudio.com/) installed for manual spell-checking
