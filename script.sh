@@ -35,6 +35,8 @@ whisper "normalized_$audioFile" \
   --output_format srt \
   --output_dir .
 
+plainTextTranscription=$(< "normalized_$audioFileWithoutExtension.srt" grep -E -v "^[0-9]+$|^[0-9]+:[0-9]+:[0-9]+,[0-9]+ --> [0-9]+:[0-9]+:[0-9]+,[0-9]+$" | sed '/^[[:space:]]*$/d' | sed 's/<u>//g; s/<\/u>//g' | awk '!seen[$0]++' | tr -d '\n' | head -100)
+
 echo "Please check the spellings and close the editor when you done"
 
 code --wait -n "normalized_$audioFileWithoutExtension.srt"
@@ -63,7 +65,7 @@ echo "——————————————"
 echo "10 titles for Youtube video based on this transcription:"
 echo ""
 
-head -100 "normalized_$audioFileWithoutExtension.srt" | llm -m mistral-7b-instruct-v0 -s "Give me 10 titles for Youtube video based on this transcription"
+echo "$plainTextTranscription" | llm -m mistral-7b-instruct-v0 -s "Give me 10 titles for Youtube video based on this transcription"
 
 echo "——————————————"
 
@@ -73,7 +75,17 @@ echo "——————————————"
 echo "10 tags for Youtube video based on this transcription:"
 echo ""
 
-head -100 "normalized_$audioFileWithoutExtension.srt" | llm -m mistral-7b-instruct-v0 -s "Give me 10 tags for Youtube video based on this transcription"
+echo "$plainTextTranscription" | llm -m mistral-7b-instruct-v0 -s "Give me 10 tags for Youtube video based on this transcription"
+
+echo "——————————————"
+
+echo ""
+
+echo "——————————————"
+echo "Description for Youtube video based on this transcription:"
+echo ""
+
+echo "$plainTextTranscription" | llm -m mistral-7b-instruct-v0 -s "Give me description based on this transcription"
 
 echo "——————————————"
 
@@ -81,7 +93,6 @@ osascript -e 'display notification "Video from audio has been completed" with ti
 
 echo "Cleaning up"
 
-rm "$audioFile"
 rm "desilenced_$audioFile"
 rm "normalized_$audioFile"
 rm "$audioFileWithoutExtension.mp4"
