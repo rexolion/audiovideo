@@ -57,7 +57,7 @@ ffmpeg \
   -loglevel error \
   -i "$audioFileWithoutExtension.mp4" \
   -vf subtitles="normalized_$audioFileWithoutExtension.srt:force_style='FontName=Futura,FontSize=28,Outline=0,Shadow=0,MarginV=40,Alignment=6'" \
-  "${audioFileWithoutExtension}_for_publish2.mp4"
+  "${audioFileWithoutExtension}_for_publish.mp4"
 
 echo "——————————————"
 echo "10 titles for Youtube video based on this transcription:"
@@ -82,6 +82,8 @@ osascript -e 'display notification "Video from audio has been completed" with ti
 echo "Cleaning up"
 
 rm "$audioFile"
+rm "desilenced_$audioFile"
+rm "normalized_$audioFile"
 rm "$audioFileWithoutExtension.mp4"
 
 echo "Success"
